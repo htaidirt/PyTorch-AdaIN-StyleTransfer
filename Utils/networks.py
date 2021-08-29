@@ -47,7 +47,7 @@ class StyleTransferNetwork(nn.Module):
     self.train = boolean
 
   def adjust_learning_rate(self, optimiser, iters): # Simple learning rate decay
-    lr = learning_rate / (1.0 + learning_rate_decay * iters)
+    lr = self.learning_rate / (1.0 + self.learning_rate_decay * iters)
     for param_group in optimiser.param_groups:
         param_group['lr'] = lr
 
