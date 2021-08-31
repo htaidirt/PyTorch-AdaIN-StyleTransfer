@@ -5,7 +5,7 @@ echo "-- Loading necessary data"
 if [[ ! -d ./data/wikiart ]]
 then
     echo "Downloading wikiart dataset from AWS S3..."
-    aws s3 cp s3://axa-climate-data-science-storage-sandbox/datasets/wikiart_flat/ ./data/wikiart
+    aws s3 sync s3://axa-climate-data-science-storage-sandbox/datasets/wikiart_flat/ ./data/wikiart
 else
     echo "[SKIP] Dataset wikiart already downloaded"
 fi
@@ -13,7 +13,7 @@ fi
 if [[ ! -d ./data/coco_images ]]
 then
     echo "Downloading COCO dataset from AWS S3..."
-    aws s3 cp s3://axa-climate-data-science-storage-sandbox/datasets/test2015/ ./data/coco_images
+    aws s3 sync s3://axa-climate-data-science-storage-sandbox/datasets/test2015/ ./data/coco_images
 else
     echo "[SKIP] Dataset COCO already downloaded"
 fi
