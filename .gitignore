@@ -1,0 +1,8 @@
+venv/
+
+data/*
+!data/.keep
+resources/*
+!resources/.keep
+models/*
+!models/.keep
