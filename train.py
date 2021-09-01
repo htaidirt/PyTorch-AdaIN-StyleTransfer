@@ -105,7 +105,7 @@ def training_loop(network, # StyleTransferNetwork
         writer.add_scalar("Style Loss", style_loss*1000, iters)
         writer.add_scalar("Content Loss", content_loss*1000, iters)
 
-      if (iters+1) % 500 == 1:
+      if (iters+1) % 50 == 1:
         with torch.no_grad():
           network.set_train(False)
           images = network(fixed_batch_style, fixed_batch_content)
@@ -113,7 +113,7 @@ def training_loop(network, # StyleTransferNetwork
           writer.add_image("Progress Iter: {}".format(iters), img_grid)
           network.set_train(True)
 
-      if (iters+1) % 1000 == 1:
+      if (iters+1) % 100 == 1:
           save_state(network.decoder.state_dict(), network.optimiser.state_dict(), iters, run_dir)
           writer.close()
           writer = SummaryWriter(os.path.join(path, run_dir))
