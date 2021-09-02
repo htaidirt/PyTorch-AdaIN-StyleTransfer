@@ -151,7 +151,7 @@ network = networks.StyleTransferNetwork(device,
                                         learning_rate,
                                         learning_rate_decay,
                                         gamma,
-                                        load_fromstate=False,
+                                        load_fromstate=True,
                                         load_path=os.path.join(path, "models/StyleTransfer_Checkpoint_Iter_45500.tar"),
                                        )
 
