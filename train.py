@@ -105,15 +105,18 @@ def training_loop(network, # StyleTransferNetwork
         writer.add_scalar("Style Loss", style_loss*1000, iters)
         writer.add_scalar("Content Loss", content_loss*1000, iters)
 
-      if (iters+1) % 50 == 1:
-        with torch.no_grad():
-          network.set_train(False)
-          images = network(fixed_batch_style, fixed_batch_content)
-          img_grid = torchvision.utils.make_grid(images)
-          writer.add_image("Progress Iter: {}".format(iters), img_grid)
-          network.set_train(True)
+      # if (iters+1) % 50 == 1:
+      #   with torch.no_grad():
+      #     network.set_train(False)
+      #     images = network(fixed_batch_style, fixed_batch_content)
+      #     img_grid = torchvision.utils.make_grid(images)
+      #     writer.add_image("Progress Iter: {}".format(iters), img_grid)
+      #     network.set_train(True)
 
       if (iters+1) % 100 == 1:
+        print(f"Now on iters={iters}")
+
+      if (iters+1) % 500 == 1:
           save_state(network.decoder.state_dict(), network.optimiser.state_dict(), iters, run_dir)
           writer.close()
           writer = SummaryWriter(os.path.join(path, run_dir))
@@ -137,7 +140,7 @@ network = networks.StyleTransferNetwork(device,
                                         learning_rate_decay,
                                         gamma,
                                         load_fromstate=False,
-                                        load_path=os.path.join(path, "models/StyleTransfer_Checkpoint_Iter_120000.tar"),
+                                        load_path=os.path.join(path, "models/StyleTransfer_Checkpoint_Iter_40000.tar"),
                                        )
 
 training_loop(network, dataloader_comb, n_epochs, run_dir)
