@@ -1,3 +1,4 @@
+import boto3
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -15,6 +16,8 @@ torch.manual_seed(manualSeed)
 
 path = "/home/ec2-user/app"
 sys.path.append(path)
+
+s3 = boto3.resource('s3')
 
 
 class Images(Dataset):
@@ -59,12 +62,20 @@ all_img = Images(pathStyleImages, pathContentImages, transform=transform)
 
 # Simple save
 def save_state(decoder, optimiser, iters, run_dir):
-  name = "models/StyleTransfer_Checkpoint_Iter_{}.tar".format(iters)
+  name = "StyleTransfer_Checkpoint_Iter_{}.tar".format(iters)
   torch.save({"Decoder" : decoder,
               "Optimiser" : optimiser,
               "iters": iters
-              }, os.path.join(path, name))
+              }, os.path.join(path, "models", name))
   print("Saved : {} succesfully".format(name))
+  return name
+
+
+# Upload file to S3
+def upload_file(name):
+  local_path = os.path.join(path, "models", name)
+  remote_path = f"models/{name}"
+  s3.meta.client.upload_file(local_path, 'axa-climate-data-science-storage-sandbox', remote_path)
 
 
 def training_loop(network, # StyleTransferNetwork
@@ -117,7 +128,8 @@ def training_loop(network, # StyleTransferNetwork
         print(f"Now on iters={iters}")
 
       if (iters+1) % 500 == 1:
-          save_state(network.decoder.state_dict(), network.optimiser.state_dict(), iters, run_dir)
+          name = save_state(network.decoder.state_dict(), network.optimiser.state_dict(), iters, run_dir)
+          upload_file(name)
           writer.close()
           writer = SummaryWriter(os.path.join(path, run_dir))
 
